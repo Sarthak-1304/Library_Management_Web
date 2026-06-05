@@ -13,7 +13,14 @@ from flask import (
     session, flash, jsonify
 )
 
-from config import SECRET_KEY, FINE_PER_DAY, DEFAULT_ISSUE_DAYS
+try:
+    from config import SECRET_KEY, FINE_PER_DAY, DEFAULT_ISSUE_DAYS
+except ImportError:
+    import os
+    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-library-ms-2024")
+    FINE_PER_DAY = 2.00
+    DEFAULT_ISSUE_DAYS = 14
+
 from database import Database, _hash, today, due_date, calc_fine
 
 # ── Flask app ────────────────────────────────────────────────

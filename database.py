@@ -9,8 +9,13 @@ import hashlib
 import datetime
 import sqlite3
 import os
-
-from config import DATABASE, DEFAULT_ISSUE_DAYS, FINE_PER_DAY
+try:
+    from config import DATABASE, DEFAULT_ISSUE_DAYS, FINE_PER_DAY
+except ImportError:
+    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+    DATABASE = os.environ.get("DATABASE_URL", os.path.join(BASE_DIR, "library.db"))
+    DEFAULT_ISSUE_DAYS = 14
+    FINE_PER_DAY = 2.00
 
 
 # ── tiny helpers ─────────────────────────────────────────────
