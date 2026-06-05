@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Fines Overview{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2 class="page-title">Fines Overview</h2>
+</div>
+
+<div class="page-divider"></div>
+
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>ID</th>
+        <th>Book Title</th>
+        <th>Due Date</th>
+        <th>Returned</th>
+        <th>Fine</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if not records %}
+        <tr>
+          <td colspan="7" style="text-align: center; color: var(--muted); padding: 30px;">No fines on record.</td>
+        </tr>
+      {% else %}
+        {% for rec in records %}
+          <tr>
+            <td style="font-weight: 500;">{{ rec.name }}</td>
+            <td><code>{{ rec.student_id }}</code></td>
+            <td>{{ rec.title }}</td>
+            <td>{{ rec.due_date }}</td>
+            <td>{{ rec.returned_at[:10] if rec.returned_at else '—' }}</td>
+            <td style="font-weight: 700; color: var(--danger);">₹ {{ "%.2f"|format(rec.live_fine) }}</td>
+            <td>
+              {% if rec.status == 'issued' %}
+                <span class="status-badge danger">Issued (Accumulating)</span>
+              {% else %}
+                <span class="status-badge success">Returned (Paid/Logged)</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

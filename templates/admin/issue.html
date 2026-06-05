@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Issue Book{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2 class="page-title">Issue a Book</h2>
+  <div class="page-subtitle">Search and select the student and book — no ISBN memorisation needed.</div>
+</div>
+
+<div class="page-divider"></div>
+
+<div class="card-panel" style="max-width: 800px; padding: 36px; margin: 0 auto;">
+  <form action="{{ url_for('admin_issue') }}" method="POST">
+    <!-- Student Picker Dropdown -->
+    <div class="form-group">
+      <label>Student</label>
+      <div class="dropdown-container">
+        <input type="text" class="form-control dropdown-search-input" placeholder="Click to browse all students, or type to filter…" required autocomplete="off">
+        <input type="hidden" name="student_id" class="dropdown-value-input">
+        <div class="dropdown-menu-custom">
+          {% for stu in students %}
+            <div class="dropdown-item-custom" data-value="{{ stu.student_id }}" data-label="{{ stu.name }} ({{ stu.student_id }})">
+              <span>{{ stu.name }} ({{ stu.student_id }})</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Book Picker Dropdown -->
+    <div class="form-group" style="margin-top: 20px;">
+      <label>Book (click to browse all, or type to filter)</label>
+      <div class="dropdown-container">
+        <input type="text" class="form-control dropdown-search-input" placeholder="Click here to browse all books…" required autocomplete="off">
+        <input type="hidden" name="book_isbn" class="dropdown-value-input">
+        <div class="dropdown-menu-custom">
+          {% for bk in books %}
+            {% set available = bk.available %}
+            {% if available >= 5 %}
+              {% set badge_class = 'badge-green' %}
+              {% set badge_text = available ~ ' available' %}
+              {% set val = bk.isbn %}
+            {% elif available >= 1 %}
+              {% set badge_class = 'badge-orange' %}
+              {% set badge_text = available ~ ' available' %}
+              {% set val = bk.isbn %}
+            {% else %}
+              {% set badge_class = 'badge-red' %}
+              {% set badge_text = 'Out of stock' %}
+              {% set val = '' %}
+            {% endif %}
+            <div class="dropdown-item-custom {% if not val %}disabled{% endif %}" data-value="{{ val }}" data-label="{{ bk.title }} &middot; {{ bk.author }}" style="{% if not val %}opacity: 0.5; pointer-events: none;{% endif %}">
+              <span>{{ bk.title }} &middot; {{ bk.author }}</span>
+              <span class="dropdown-item-badge {{ badge_class }}">{{ badge_text }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Loan Period -->
+    <div class="form-group" style="margin-top: 20px;">
+      <label>Loan Period (days, default = {{ default_days }})</label>
+      <input type="number" name="days" class="form-control" value="{{ default_days }}" min="1" required autocomplete="off">
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary" style="width: 100%; height: 42px; margin-top: 24px;">✔ Issue Book</button>
+  </form>
+</div>
+{% endblock %}

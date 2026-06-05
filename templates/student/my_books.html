@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}My Issued Books{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2 class="page-title">My Issued Books</h2>
+  <div class="page-subtitle">All books currently issued to you.</div>
+</div>
+
+<div class="page-divider"></div>
+
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Category</th>
+        <th>Issued On</th>
+        <th>Due Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if not books %}
+        <tr>
+          <td colspan="6" style="text-align: center; color: var(--muted); padding: 30px;">You have no books currently issued.</td>
+        </tr>
+      {% else %}
+        {% for bk in books %}
+          <tr>
+            <td style="font-weight: 500;">{{ bk.title }}</td>
+            <td>{{ bk.author }}</td>
+            <td>{{ bk.category }}</td>
+            <td>{{ bk.issued_at[:10] }}</td>
+            <td>{{ bk.due_date }}</td>
+            <td>
+              {% if bk.overdue_days > 0 %}
+                <span class="status-badge danger">Overdue {{ bk.overdue_days }}d (₹{{ "%.0f"|format(bk.fine) }} fine)</span>
+              {% else %}
+                <span class="status-badge success">On time</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

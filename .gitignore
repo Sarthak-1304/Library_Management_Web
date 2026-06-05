@@ -1,0 +1,23 @@
+# ── secrets ──
+config.py
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ── Python cache ──
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# ── virtual env ──
+venv/
+env/
+.env
+
+# ── IDE ──
+.vscode/
+.idea/
+*.suo

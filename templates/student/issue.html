@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Issue Book{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2 class="page-title">Issue a Book</h2>
+  <div class="page-subtitle">Click the dropdown to see all books, or type to search.</div>
+</div>
+
+<div class="page-divider"></div>
+
+<div class="card-panel" style="max-width: 800px; padding: 36px; margin: 0 auto 30px;">
+  <form action="{{ url_for('student_issue') }}" method="POST">
+    <!-- Book Dropdown -->
+    <div class="form-group">
+      <label>Select a Book</label>
+      <div class="dropdown-container">
+        <input type="text" class="form-control dropdown-search-input" placeholder="Click here to browse all books…" required autocomplete="off">
+        <input type="hidden" name="book_isbn" class="dropdown-value-input">
+        <div class="dropdown-menu-custom">
+          {% for bk in books %}
+            {% set available = bk.available %}
+            {% if available >= 5 %}
+              {% set badge_class = 'badge-green' %}
+              {% set badge_text = available ~ ' available' %}
+              {% set val = bk.isbn %}
+            {% elif available >= 1 %}
+              {% set badge_class = 'badge-orange' %}
+              {% set badge_text = available ~ ' available' %}
+              {% set val = bk.isbn %}
+            {% else %}
+              {% set badge_class = 'badge-red' %}
+              {% set badge_text = 'Out of stock' %}
+              {% set val = '' %}
+            {% endif %}
+            <div class="dropdown-item-custom {% if not val %}disabled{% endif %}" data-value="{{ val }}" data-label="{{ bk.title }} &middot; {{ bk.author }}" style="{% if not val %}opacity: 0.5; pointer-events: none;{% endif %}">
+              <span>{{ bk.title }} &middot; {{ bk.author }}</span>
+              <span class="dropdown-item-badge {{ badge_class }}">{{ badge_text }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary" style="width: 100%; height: 42px; margin-top: 20px;">Issue This Book</button>
+  </form>
+</div>
+
+<!-- Full Catalogue -->
+<h3 style="font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text);">All Books</h3>
+<div class="toolbar" style="margin-bottom: 12px;">
+  <form action="{{ url_for('student_issue') }}" method="GET" class="search-box">
+    <input type="text" name="q" class="search-input" placeholder="Search title, author or category…" value="{{ query or '' }}" autocomplete="off" oninput="this.form.submit()">
+  </form>
+</div>
+
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Category</th>
+        <th style="text-align: center;">Total</th>
+        <th style="text-align: center;">Available</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if not books %}
+        <tr>
+          <td colspan="5" style="text-align: center; color: var(--muted); padding: 30px;">No books found.</td>
+        </tr>
+      {% else %}
+        {% for bk in books %}
+          <tr>
+            <td style="font-weight: 500;">{{ bk.title }}</td>
+            <td>{{ bk.author }}</td>
+            <td>{{ bk.category }}</td>
+            <td style="text-align: center;">{{ bk.total_copies }}</td>
+            <td style="text-align: center;">
+              {% if bk.available >= 5 %}
+                <span class="status-badge success">{{ bk.available }} available</span>
+              {% elif bk.available >= 1 %}
+                <span class="status-badge" style="background-color: rgba(245, 158, 11, 0.15); color: var(--warning);">{{ bk.available }} available</span>
+              {% else %}
+                <span class="status-badge danger">Out of stock</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

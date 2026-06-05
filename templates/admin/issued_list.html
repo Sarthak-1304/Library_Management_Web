@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Currently Issued Books{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2 class="page-title">Currently Issued Books</h2>
+</div>
+
+<div class="page-divider"></div>
+
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 50px; text-align: center;">#</th>
+        <th>Student</th>
+        <th>ID</th>
+        <th>Book Title</th>
+        <th>ISBN</th>
+        <th>Issued On</th>
+        <th>Due Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if not records %}
+        <tr>
+          <td colspan="8" style="text-align: center; color: var(--muted); padding: 30px;">No books are currently issued.</td>
+        </tr>
+      {% else %}
+        {% for rec in records %}
+          <tr>
+            <td style="text-align: center; color: var(--muted);">{{ loop.index }}</td>
+            <td style="font-weight: 500;">{{ rec.name }}</td>
+            <td><code>{{ rec.student_id }}</code></td>
+            <td>{{ rec.title }}</td>
+            <td><code>{{ rec.isbn }}</code></td>
+            <td>{{ rec.issued_at[:10] }}</td>
+            <td>{{ rec.due_date }}</td>
+            <td>
+              {% if rec.overdue_days > 0 %}
+                <span class="status-badge danger">⚠ {{ rec.overdue_days }}d overdue</span>
+              {% else %}
+                <span class="status-badge success">✔ On time</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

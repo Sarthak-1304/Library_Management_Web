@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Return Book{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2 class="page-title">Return a Book</h2>
+  <div class="page-subtitle">Select a student — their issued books will appear automatically.</div>
+</div>
+
+<div class="page-divider"></div>
+
+<div class="card-panel" style="max-width: 800px; padding: 36px; margin: 0 auto;">
+  <form action="{{ url_for('admin_return') }}" method="POST">
+    <!-- Student Picker Dropdown -->
+    <div class="form-group">
+      <label>Student</label>
+      <div class="dropdown-container" id="student-return-dropdown">
+        <input type="text" class="form-control dropdown-search-input" placeholder="Click to browse all students, or type to filter…" required autocomplete="off">
+        <input type="hidden" name="student_id" class="dropdown-value-input">
+        <div class="dropdown-menu-custom">
+          {% for stu in students %}
+            <div class="dropdown-item-custom" data-value="{{ stu.student_id }}" data-label="{{ stu.name }} ({{ stu.student_id }})">
+              <span>{{ stu.name }} ({{ stu.student_id }})</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Book Selection Dropdown (Populated by JS on student selection) -->
+    <div class="form-group" style="margin-top: 20px;">
+      <label>Book to Return (select student first)</label>
+      <select name="book_isbn" id="return-book-select" class="form-control" style="height: 40px; background-color: var(--input);" required>
+        <option value="">— select a student above —</option>
+      </select>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-success" style="width: 100%; height: 42px; margin-top: 24px;">↩ Return Book</button>
+  </form>
+</div>
+{% endblock %}

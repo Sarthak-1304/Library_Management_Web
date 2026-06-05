@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2 class="page-title">Welcome, {{ name }}</h2>
+  <div class="page-subtitle">{{ today.strftime('%A, %d %B %Y') }}</div>
+</div>
+
+<div class="page-divider"></div>
+
+<!-- Stat Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-title">Books I Have</div>
+    <div class="stat-value accent">{{ issued }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Overdue</div>
+    <div class="stat-value {% if overdue > 0 %}danger{% else %}muted{% endif %}">{{ overdue }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Books in Library</div>
+    <div class="stat-value success">{{ avail }}</div>
+  </div>
+</div>
+
+<!-- Overdue alert banner -->
+{% if overdue > 0 %}
+<div class="alert-banner" style="margin-bottom: 25px;">
+  <span>⚠</span> You have {{ overdue }} overdue book(s) — please return them soon.
+</div>
+{% endif %}
+
+<!-- My Current Books list -->
+<h3 style="font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text);">My Current Books</h3>
+<div class="card-panel" style="padding: 10px 0;">
+  {% if not current_books %}
+    <p style="text-align: center; color: var(--muted); padding: 20px;">No books currently issued. Go to 'Issue Book' to get one!</p>
+  {% else %}
+    <div style="display: flex; flex-direction: column;">
+      {% for r in current_books %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 24px; border-bottom: 1px solid rgba(39, 44, 66, 0.4);">
+          <span style="font-size: 13px; font-weight: 500; color: var(--text);">{{ r.title }}</span>
+          {% if r.overdue_days > 0 %}
+            <span style="font-size: 12px; color: var(--danger); font-weight: 700;">⚠ {{ r.overdue_days }}d overdue</span>
+          {% else %}
+            <span style="font-size: 12px; color: var(--success);">due {{ r.due_date }}</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

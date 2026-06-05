@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library MS — {% block title %}{% endblock %}</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="emoji">📚</span>
+        <h1>Library MS</h1>
+      </div>
+      <div class="sidebar-user">
+        {{ role }} &middot; {{ user }}
+      </div>
+      <div class="sidebar-divider"></div>
+      
+      <nav class="sidebar-nav">
+        {% if role == 'admin' %}
+          <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if active == 'dashboard' %}active{% endif %}">
+            <span>🏠</span> Dashboard
+          </a>
+          <a href="{{ url_for('admin_books') }}" class="nav-link {% if active == 'books' %}active{% endif %}">
+            <span>📚</span> Books
+          </a>
+          <a href="{{ url_for('admin_students') }}" class="nav-link {% if active == 'students' %}active{% endif %}">
+            <span>👤</span> Students
+          </a>
+          <a href="{{ url_for('admin_issue') }}" class="nav-link {% if active == 'issue' %}active{% endif %}">
+            <span>📤</span> Issue Book
+          </a>
+          <a href="{{ url_for('admin_return') }}" class="nav-link {% if active == 'return' %}active{% endif %}">
+            <span>📥</span> Return Book
+          </a>
+          <a href="{{ url_for('admin_issued_list') }}" class="nav-link {% if active == 'issued_list' %}active{% endif %}">
+            <span>📋</span> Issued List
+          </a>
+          <a href="{{ url_for('admin_fines') }}" class="nav-link {% if active == 'fines' %}active{% endif %}">
+            <span>💰</span> Fines
+          </a>
+          <a href="{{ url_for('admin_audit_log') }}" class="nav-link {% if active == 'audit_log' %}active{% endif %}">
+            <span>🗒</span> Audit Log
+          </a>
+        {% else %}
+          <a href="{{ url_for('student_dashboard') }}" class="nav-link {% if active == 'dashboard' %}active{% endif %}">
+            <span>🏠</span> Dashboard
+          </a>
+          <a href="{{ url_for('student_issue') }}" class="nav-link {% if active == 'issue' %}active{% endif %}">
+            <span>📤</span> Issue Book
+          </a>
+          <a href="{{ url_for('student_my_books') }}" class="nav-link {% if active == 'my_books' %}active{% endif %}">
+            <span>📋</span> My Books
+          </a>
+        {% endif %}
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="sidebar-divider" style="margin: 0 0 10px 0;"></div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+          <span>⬅</span> Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+      <!-- Flash Alert Banners -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+            <div class="alert-banner {{ category }}">
+              {% if category == 'error' or category == 'danger' %}
+                <span>⚠</span>
+              {% else %}
+                <span>✔</span>
+              {% endif %}
+              {{ msg }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

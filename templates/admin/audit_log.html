@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Audit Log{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2 class="page-title">Audit Log</h2>
+  <div class="page-subtitle">Every action taken in the system is recorded here.</div>
+</div>
+
+<div class="page-divider"></div>
+
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 140px;">Actor</th>
+        <th style="width: 120px;">Action</th>
+        <th>Details</th>
+        <th style="width: 180px;">Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if not logs %}
+        <tr>
+          <td colspan="4" style="text-align: center; color: var(--muted); padding: 30px;">No logs recorded yet.</td>
+        </tr>
+      {% else %}
+        {% for lg in logs %}
+          <tr>
+            <td style="font-weight: 500;">{{ lg.actor }}</td>
+            <td><code style="color: var(--accent);">[{{ lg.action }}]</code></td>
+            <td>{{ lg.details }}</td>
+            <td style="color: var(--muted);">{{ lg.timestamp }}</td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

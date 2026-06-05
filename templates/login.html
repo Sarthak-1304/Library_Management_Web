@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library MS — Sign In</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-body">
+  <div class="login-card">
+    <div class="login-header">
+      <span class="emoji">📚</span>
+      <h1>Library Management System</h1>
+      <p>Sign in to your account</p>
+    </div>
+
+    <form action="{{ url_for('login') }}" method="POST">
+      <!-- Role Toggle Segmented Control -->
+      <div class="role-toggle-container">
+        <button type="button" id="btn-role-admin" class="role-btn {% if role == 'admin' %}active{% endif %}" onclick="toggleLoginRole('admin')">Admin</button>
+        <button type="button" id="btn-role-student" class="role-btn {% if role == 'student' %}active{% endif %}" onclick="toggleLoginRole('student')">Student</button>
+      </div>
+      <input type="hidden" name="role" id="login-role-input" value="{{ role }}">
+
+      <!-- Username / ID -->
+      <div class="form-group">
+        <label id="login-id-label">{% if role == 'admin' %}Username{% else %}Student ID{% endif %}</label>
+        <input type="text" name="username" id="login-id-input" class="form-control" placeholder="{% if role == 'admin' %}Enter username{% else %}e.g. STU2024001{% endif %}" required autocomplete="off">
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+      </div>
+
+      <!-- Error message -->
+      {% if error %}
+        <p style="color: var(--danger); font-size: 11px; text-align: center; margin: 10px 0;">⚠ {{ error }}</p>
+      {% endif %}
+
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary" style="width: 100%; height: 42px; margin-top: 10px;">Sign In &rarr;</button>
+    </form>
+
+    <!-- Demo login shortcut for recruiters -->
+    <div class="demo-login-box">
+      <p>Quick Recruiter Demo Access:</p>
+      <div class="demo-btn-group">
+        <a href="{{ url_for('demo_login', role='admin') }}" class="btn btn-outline" style="padding: 6px 14px;">Demo Admin</a>
+        <a href="{{ url_for('demo_login', role='student') }}" class="btn btn-outline" style="padding: 6px 14px;">Demo Student</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

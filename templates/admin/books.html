@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Book Catalogue{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2 class="page-title">Book Catalogue</h2>
+</div>
+
+<div class="toolbar">
+  <form action="{{ url_for('admin_books') }}" method="GET" class="search-box">
+    <input type="text" name="q" class="search-input" placeholder="🔍 Search by title, author or category…" value="{{ query or '' }}" autocomplete="off" oninput="this.form.submit()">
+  </form>
+  <button class="btn btn-primary" data-modal-target="add-book-modal">+ Add Book</button>
+</div>
+
+<!-- Books Table -->
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ISBN</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Category</th>
+        <th style="text-align: center;">Total</th>
+        <th style="text-align: center;">Available</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if not books %}
+        <tr>
+          <td colspan="6" style="text-align: center; color: var(--muted); padding: 30px;">No books found.</td>
+        </tr>
+      {% else %}
+        {% for bk in books %}
+          <tr>
+            <td><code>{{ bk.isbn }}</code></td>
+            <td style="font-weight: 500;">{{ bk.title }}</td>
+            <td>{{ bk.author }}</td>
+            <td>{{ bk.category }}</td>
+            <td style="text-align: center;">{{ bk.total_copies }}</td>
+            <td style="text-align: center;">
+              {% if bk.available >= 5 %}
+                <span class="status-badge success" style="padding: 2px 6px;">{{ bk.available }} available</span>
+              {% elif bk.available >= 1 %}
+                <span class="status-badge" style="background-color: rgba(245, 158, 11, 0.15); color: var(--warning); padding: 2px 6px;">{{ bk.available }} available</span>
+              {% else %}
+                <span class="status-badge danger" style="padding: 2px 6px;">Out of stock</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Add Book Modal Dialog -->
+<div class="modal-overlay" id="add-book-modal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 class="modal-title">Add New Book</h3>
+    </div>
+    <form action="{{ url_for('admin_add_book') }}" method="POST">
+      <div class="form-group">
+        <label>ISBN</label>
+        <input type="text" name="isbn" class="form-control" placeholder="e.g. 978-0-13-…" required autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="title" class="form-control" placeholder="Book title" required autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" name="author" class="form-control" placeholder="Author name(s)" required autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <input type="text" name="category" class="form-control" placeholder="e.g. Python, Networks…" required autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Copies</label>
+        <input type="number" name="copies" class="form-control" placeholder="Number of copies" min="1" required autocomplete="off">
+      </div>
+      
+      <div style="display: flex; gap: 12px; margin-top: 24px;">
+        <button type="button" class="btn btn-outline" style="flex: 1;" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary" style="flex: 1;">Add Book</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
