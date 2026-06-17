@@ -1,6 +1,6 @@
 # 📚 Library Management System
 
-A modern desktop-based **Library Management System** developed using **Python, CustomTkinter, and MySQL**. The application provides dedicated interfaces for administrators and students, enabling efficient book management, user registration, issue/return operations, fine tracking, and audit logging through an intuitive graphical interface.
+A modern web-based **Library Management System** developed using **Python, Flask, and SQLite**. The application provides dedicated interfaces for administrators and students, enabling efficient book management, user registration, issue/return operations, fine tracking, and audit logging through an intuitive web interface.
 
 ---
 
@@ -29,14 +29,20 @@ A modern desktop-based **Library Management System** developed using **Python, C
 ## 🗂 Project Structure
 
 ```text
-library_ms/
-├── main_app.py        # Main application window & navigation
-├── login_window.py    # Login screen (Admin / Student)
-├── tabs_admin.py      # Admin dashboard and management modules
-├── tabs_student.py    # Student portal functionality
-├── ui_helpers.py      # Shared UI components and themes
-├── database.py        # Database schema and query operations
-├── config.py          # Database configuration (excluded from Git)
+Library_Management_Web/
+├── app.py                 # Flask web application entry point
+├── database.py            # Database schema and query operations
+├── login_window.py        # Legacy - Login functionality (desktop version)
+├── main_app.py            # Legacy - Main application window (desktop version)
+├── tabs_admin.py          # Legacy - Admin dashboard (desktop version)
+├── tabs_student.py        # Legacy - Student portal (desktop version)
+├── ui_helpers.py          # Shared UI utilities
+├── check_db.py            # Database check and initialization
+├── db_shell.py            # Database shell utility
+├── static/                # Static assets (CSS, JavaScript, images)
+├── templates/             # HTML templates for Flask
+├── requirements.txt       # Python dependencies
+├── render.yaml            # Render deployment configuration
 ├── .gitignore
 └── README.md
 ```
@@ -88,13 +94,13 @@ library_ms/
 
 ---
 
-## ⚙️ Installation & Setup (Web App)
+## ⚙️ Installation & Setup
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Sarthak-1304/Library-Management-.git
-cd Library-Management-
+git clone https://github.com/Sarthak-1304/Library_Management_Web.git
+cd Library_Management_Web
 ```
 
 ### 2. Install Dependencies
@@ -103,13 +109,13 @@ cd Library-Management-
 pip install -r requirements.txt
 ```
 
-### 3. Run the Application locally
+### 3. Run the Application
 
 ```bash
 python app.py
 ```
 
-The application automatically creates the SQLite database (`library.db`), runs schema migrations, seeds sample books and demo accounts, and starts the development server at `http://127.0.0.1:5000/`.
+The application automatically creates the SQLite database (`library.db`), runs schema migrations, seeds sample books and demo accounts, and starts the Flask development server at `http://127.0.0.1:5000/`.
 
 ---
 
@@ -141,7 +147,7 @@ For convenience, the login page contains **Demo Access buttons** allowing users/
 
 * **Backend**: Python, Flask
 * **Database**: SQLite3 (Single source of truth)
-* **Frontend**: HTML5, Vanilla CSS3 (Custom Dark Theme matching CustomTkinter layout), JavaScript (ES6, AJAX integrations)
+* **Frontend**: HTML5, Vanilla CSS3 (Custom Dark Theme), JavaScript (ES6, AJAX integrations)
 * **Deployment**: Render / Gunicorn
 
 ---
